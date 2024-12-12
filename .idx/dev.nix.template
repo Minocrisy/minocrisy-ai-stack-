@@ -1,0 +1,136 @@
+# Master development environment configuration
+# Maintained at: ~/my-idx-template/dev.nix
+# Last updated: 2024
+# Purpose: Complete AI, Web, and Cloud development environment
+
+{ pkgs, ... }: {
+  channel = "stable-23.11";
+
+  packages = [
+    # Core Development
+    pkgs.nodejs_20
+    pkgs.python311
+    pkgs.python311Packages.pip
+    pkgs.go
+    pkgs.git
+    pkgs.ripgrep
+    pkgs.jq
+
+    # Build & Deploy
+    pkgs.docker
+    pkgs.docker-compose
+    pkgs.kubectl
+    pkgs.terraform
+    pkgs.nginx
+
+    # Database Tools
+    pkgs.mongodb-tools
+    pkgs.mongosh
+    pkgs.postgresql   # PostgreSQL client
+    pkgs.redis       # Redis client
+
+    # Cloud & Infrastructure
+    pkgs.google-cloud-sdk
+    pkgs.awscli2     # AWS CLI (corrected name)
+    pkgs.azure-cli   # Azure CLI
+
+    # Media & Processing
+    pkgs.ffmpeg
+    pkgs.opencv
+    pkgs.imagemagick
+
+    # Security & Authentication
+    pkgs.gh
+    pkgs.gnupg
+    pkgs.openssh
+    pkgs.sops        # Secrets management
+
+    # Development Tools
+    pkgs.curl
+    pkgs.poetry
+    pkgs.rust-analyzer
+    pkgs.rustc
+    pkgs.cargo
+
+    # Language Support
+    pkgs.python311Packages.python-lsp-server
+    pkgs.nodePackages.typescript-language-server
+    pkgs.gopls
+    pkgs.rust-analyzer
+    pkgs.nil         # Nix language server
+  ];
+
+  env = {
+    # Editor & Terminal
+    EDITOR = "code";
+    TERM = "xterm-256color";
+
+    # API Keys & Credentials - Replace with your actual keys locally
+    CLINE_API_KEY = "YOUR_CLINE_API_KEY";
+    NOTION_API_KEY = "YOUR_NOTION_API_KEY";
+    NOTION_DATABASE_ID = "YOUR_NOTION_DATABASE_ID";
+
+    # Database Connections
+    MONGODB_URI = "";
+    POSTGRES_URL = "";
+    REDIS_URL = "";
+
+    # Cloud Platform Configurations
+    GOOGLE_APPLICATION_CREDENTIALS = "";
+    GOOGLE_CLOUD_PROJECT = "";
+    AWS_PROFILE = "";
+    AZURE_SUBSCRIPTION_ID = "";
+  };
+
+  # IDX specific configurations
+  idx = {
+    extensions = [
+      # Development
+      "ms-python.python"
+      "golang.go"
+      "rust-lang.rust-analyzer"
+      "dbaeumer.vscode-eslint"
+      
+      # Cloud & Infrastructure
+      "ms-azuretools.vscode-docker"
+      "hashicorp.terraform"
+      "googlecloudtools.cloudcode"
+      
+      # Database
+      "mongodb.mongodb-vscode"
+      "cweijan.vscode-postgresql-client2"
+      
+      # Collaboration
+      "github.copilot"
+      "github.copilot-chat"
+      "eamodio.gitlens"
+    ];
+
+    workspace = {
+      onCreate = {
+        setup-check = ''
+          echo "🔧 Setting up development environment..."
+          git --version
+          docker --version
+          python3 --version
+          node --version
+        '';
+      };
+
+      onStart = {
+        environment-check = ''
+          echo "🔍 Checking development environment..."
+          echo "System Tools:"
+          echo "============"
+          git --version
+          docker --version
+          python3 --version
+          node --version
+          terraform --version
+          aws --version
+          gcloud --version
+        '';
+      };
+    };
+  };
+}
