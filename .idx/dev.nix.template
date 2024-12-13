@@ -31,13 +31,14 @@
 
     # Cloud & Infrastructure
     pkgs.google-cloud-sdk
-    pkgs.awscli2     # AWS CLI (corrected name)
+    pkgs.awscli2     # AWS CLI
     pkgs.azure-cli   # Azure CLI
 
     # Media & Processing
     pkgs.ffmpeg
     pkgs.opencv
     pkgs.imagemagick
+    pkgs.vips        # For sharp image processing
 
     # Security & Authentication
     pkgs.gh
@@ -69,6 +70,15 @@
     CLINE_API_KEY = "YOUR_CLINE_API_KEY";
     NOTION_API_KEY = "YOUR_NOTION_API_KEY";
     NOTION_DATABASE_ID = "YOUR_NOTION_DATABASE_ID";
+    
+    # Twitter Integration
+    TWITTER_API_KEY = "YOUR_TWITTER_API_KEY";
+    TWITTER_API_SECRET = "YOUR_TWITTER_API_SECRET";
+    TWITTER_ACCESS_TOKEN = "YOUR_TWITTER_ACCESS_TOKEN";
+    TWITTER_ACCESS_SECRET = "YOUR_TWITTER_ACCESS_SECRET";
+    
+    # AI Integration
+    GLHF_API_KEY = "YOUR_GLHF_API_KEY";
 
     # Database Connections
     MONGODB_URI = "";
@@ -85,11 +95,17 @@
   # IDX specific configurations
   idx = {
     extensions = [
+      # Core IDE Features
+      "vscodevim.vim"
+      "editorconfig.editorconfig"
+      "streetsidesoftware.code-spell-checker"
+      
       # Development
       "ms-python.python"
       "golang.go"
       "rust-lang.rust-analyzer"
       "dbaeumer.vscode-eslint"
+      "esbenp.prettier-vscode"
       
       # Cloud & Infrastructure
       "ms-azuretools.vscode-docker"
@@ -100,10 +116,17 @@
       "mongodb.mongodb-vscode"
       "cweijan.vscode-postgresql-client2"
       
-      # Collaboration
+      # Collaboration & Source Control
       "github.copilot"
       "github.copilot-chat"
       "eamodio.gitlens"
+      "mhutchie.git-graph"
+      
+      # IDE Enhancements
+      "usernamehw.errorlens"
+      "gruntfuggly.todo-tree"
+      "christian-kohler.path-intellisense"
+      "visualstudioexptteam.vscodeintellicode"
     ];
 
     workspace = {

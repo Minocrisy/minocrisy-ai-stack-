@@ -1,0 +1,1 @@
+*.nix filter=secrets

@@ -10,15 +10,16 @@ A complete AI, Web, and Cloud development environment powered by Nix.
 
 ## Features
 
-- Python development with LSP support
-- Node.js and TypeScript
-- Docker and Kubernetes
-- Cloud tools (AWS, GCP, Azure)
-- Database tools (MongoDB, PostgreSQL, Redis)
-- Media processing (FFmpeg, OpenCV)
-- Security tools (GPG, SSH, SOPS)
-- Git and GitHub integration
-- VSCode extensions for development
+- Python development with LSP support and AI/ML libraries
+- Node.js and TypeScript with modern tooling
+- Docker and Kubernetes for containerization
+- Cloud tools (AWS, GCP, Azure) with CLI support
+- Database tools (MongoDB, PostgreSQL, Redis) with management interfaces
+- Media processing (FFmpeg, OpenCV, ImageMagick)
+- Security tools (GPG, SSH, SOPS) for authentication and encryption
+- Git and GitHub integration with advanced features
+- VSCode extensions for enhanced development
+- Automated environment setup and configuration
 
 ## Usage
 
