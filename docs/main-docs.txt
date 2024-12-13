@@ -1,0 +1,74 @@
+AI DEVELOPMENT STACK DOCUMENTATION
+
+1. CORE SETUP
+- Nix-powered development environment
+- IDX integration for environment management
+- Comprehensive tool suite for AI, web, and cloud development
+- Security-first approach with credential management
+
+2. AGENT COMMUNICATION FINDINGS
+- Cline API integration works through dev.nix configuration
+- File operations have specific patterns:
+  * .txt files write successfully
+  * Other extensions may show diff editor errors
+  * Files are often created despite error messages
+  * Manual verification is important
+
+3. WORKING PRACTICES
+- Keep credentials in local dev.nix files
+- Use templates for sharing configurations
+- Test changes in development environment
+- Verify file changes manually
+- Create new files instead of modifying existing ones
+- Use .txt files for reliable documentation updates
+
+4. TOOL SUITE
+- Python with AI/ML libraries
+- Node.js and TypeScript
+- Cloud tools (AWS, GCP, Azure)
+- Database tools (MongoDB, PostgreSQL, Redis)
+- Media processing (FFmpeg, OpenCV, ImageMagick)
+- Security tools (GPG, SSH, SOPS)
+
+5. ENVIRONMENT VARIABLES
+- CLINE_API_KEY: Agent communication
+- NOTION_API_KEY: Notion integration
+- TWITTER_API_KEY: Twitter integration
+- GLHF_API_KEY: AI integration
+- Database and cloud platform configurations
+
+6. DEVELOPMENT WORKFLOW
+- Clone repository
+- Copy dev.nix.template to dev.nix
+- Add actual credentials
+- Open in VSCode with IDX
+- Rebuild environment when prompted
+- Test changes thoroughly
+- Update documentation using .txt files
+- Manual conversion to final formats
+
+7. KNOWN ISSUES AND SOLUTIONS
+- VSCode extension UI limitations:
+  * Diff editor errors are common
+  * Files often succeed despite errors
+  * Manual verification needed
+- File operations:
+  * .txt files work reliably
+  * Create new files instead of modifying
+  * Verify all changes
+  * Use list_files to check existence
+
+8. SECURITY GUIDELINES
+- Never commit real API keys
+- Keep sensitive data in local files
+- Use templates for sharing
+- Follow .gitignore rules
+- Regular security audits
+
+9. BEST PRACTICES
+- Test all changes in development
+- Document changes immediately
+- Use .txt for documentation drafts
+- Manual verification of all changes
+- Keep backups of important content
+- Regular testing of environment
