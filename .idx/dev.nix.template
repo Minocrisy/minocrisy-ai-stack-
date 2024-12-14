@@ -1,7 +1,7 @@
 # Master development environment configuration
 # Maintained at: ~/my-idx-template/dev.nix
 # Last updated: 2024
-# Purpose: Complete AI, Web, and Cloud development environment
+# Purpose: Complete AI, Web, and Cloud development environment with Agent Network support
 
 { pkgs, ... }: {
   channel = "stable-23.11";
@@ -59,6 +59,10 @@
     pkgs.gopls
     pkgs.rust-analyzer
     pkgs.nil         # Nix language server
+
+    # Agent Network Support
+    pkgs.puppeteer-cli  # For browser automation
+    pkgs.chromium      # Required for Puppeteer
   ];
 
   env = {
@@ -79,6 +83,12 @@
     
     # AI Integration
     GLHF_API_KEY = "YOUR_GLHF_API_KEY";
+    GEMINI_API_KEY = "YOUR_GEMINI_API_KEY";  # For Gemini integration
+    
+    # Agent Network Configuration
+    AGENT_NETWORK_PORT = "3000";
+    AGENT_NETWORK_HOST = "localhost";
+    PUPPETEER_EXECUTABLE_PATH = "${pkgs.chromium}/bin/chromium";  # For browser automation
 
     # Database Connections
     MONGODB_URI = "";
@@ -127,16 +137,29 @@
       "gruntfuggly.todo-tree"
       "christian-kohler.path-intellisense"
       "visualstudioexptteam.vscodeintellicode"
+
+      # AI & Agent Support
+      "google.cloud-code"  # For Gemini integration
+      "ms-toolsai.jupyter" # For AI notebooks
+      "ms-python.vscode-pylance"
     ];
 
     workspace = {
       onCreate = {
         setup-check = ''
           echo "🔧 Setting up development environment..."
+          echo "Checking core dependencies..."
           git --version
           docker --version
           python3 --version
           node --version
+
+          echo "Verifying agent network dependencies..."
+          if command -v chromium &> /dev/null; then
+            echo "✓ Chromium installed"
+          else
+            echo "⚠️ Chromium not found"
+          fi
         '';
       };
 
@@ -152,6 +175,21 @@
           terraform --version
           aws --version
           gcloud --version
+
+          echo "Agent Network Status:"
+          echo "===================="
+          echo "Checking agent network configuration..."
+          if [ -n "$AGENT_NETWORK_PORT" ]; then
+            echo "✓ Agent network configured on port $AGENT_NETWORK_PORT"
+          else
+            echo "⚠️ Agent network port not configured"
+          fi
+
+          if [ -n "$PUPPETEER_EXECUTABLE_PATH" ]; then
+            echo "✓ Browser automation path configured"
+          else
+            echo "⚠️ Browser automation path not set"
+          fi
         '';
       };
     };
