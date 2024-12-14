@@ -86,6 +86,17 @@ COMPLETED:
      - Preview generation
      - Error states
      - Loading indicators
+   ✓ TextToSpeechGenerator component tests:
+     - Voice selection and loading
+     - Text input handling
+     - File upload functionality
+     - Audio generation process
+     - Playback controls
+     - Download functionality
+     - Error handling
+     - Loading states
+     - Context integration
+     - Event callbacks
 
 CURRENT STATE:
 - Project uses Vite + React + TypeScript
@@ -107,7 +118,6 @@ CURRENT STATE:
 
 NEXT STEPS:
 1. Additional Component Tests:
-   - TextToSpeechGenerator tests
    - ImageGenerator tests
    - ModelPanel tests
    - Service integration tests
