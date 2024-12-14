@@ -13,5 +13,12 @@ build/
 # Environment and Secrets
 .env
 .env.*
-.idx/dev.nix
-my-idx-template/.idx/dev.nix
+
+# Local Development Configuration
+# Ignore local configuration files but track templates
+.idx/dev.local.nix
+my-idx-template/.idx/dev.local.nix
+
+# Keep templates tracked
+!.idx/dev.nix.template
+!my-idx-template/.idx/dev.nix.template
