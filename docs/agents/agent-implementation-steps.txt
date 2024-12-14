@@ -19,7 +19,7 @@ WORKSPACE ORGANIZATION:
 SIMPLE VERIFICATION:
 1. Gemini: Create code snippet in editor
 2. Cline: Save and test the code
-3. Gemini: Review and suggest improvements
+3. Gemini: Revew and suggest improvements
 4. Cline: Implement and verify changes
 
 DOCUMENTATION TEST:
