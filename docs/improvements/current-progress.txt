@@ -72,6 +72,20 @@ COMPLETED:
      - Error handling
      - Accessibility testing
      - Event handler testing
+   ✓ ModelSelector component tests:
+     - Model search functionality
+     - Version selection
+     - Dialog interaction
+     - Loading states
+     - Error handling
+     - Suggested models
+     - Context integration
+   ✓ CharacterCreator component tests:
+     - Form validation
+     - API integration
+     - Preview generation
+     - Error states
+     - Loading indicators
 
 CURRENT STATE:
 - Project uses Vite + React + TypeScript
@@ -89,12 +103,13 @@ CURRENT STATE:
 - Media playback controls implemented
 - Character creation workflow established
 - Testing infrastructure in place
-- First component tests implemented
+- Core component tests implemented
 
 NEXT STEPS:
 1. Additional Component Tests:
-   - CharacterCreator component tests
-   - ModelSelector component tests
+   - TextToSpeechGenerator tests
+   - ImageGenerator tests
+   - ModelPanel tests
    - Service integration tests
    - Context provider tests
    - End-to-end workflow tests
@@ -120,7 +135,9 @@ FILE LOCATIONS:
 - Contexts: src/contexts/
 - Types: src/types/
 - Styles: src/styles/globals.css
-- Tests: src/components/ui/__tests__/
+- Tests: 
+  - UI Components: src/components/ui/__tests__/
+  - Advanced Components: src/components/__tests__/
 - Configuration: 
   - tailwind.config.js
   - tsconfig.json
