@@ -1,0 +1,91 @@
+DOCUMENTATION REORGANIZATION PLAN
+
+CURRENT ISSUES:
+1. Duplicate Environment Documentation
+2. Overlapping Development Guides
+3. Scattered Main Documentation
+4. Backup Files Everywhere
+
+PROPOSED STRUCTURE:
+
+/docs/
+├── core/                           # Core Documentation
+│   ├── quick-start.md             # (moved from vision/)
+│   ├── architecture.md            # (moved from vision/)
+│   ├── use-cases.md              # (moved from vision/)
+│   └── project-structure.md       # (moved from vision/)
+│
+├── guides/                         # User & Development Guides
+│   ├── development/              # Development Documentation
+│   │   ├── workflow.md          # (merged from improvements/ and vision/)
+│   │   ├── contributing.md      # (moved from root)
+│   │   └── best-practices.md    # (new, combining best practices)
+│   │
+│   └── environment/             # Environment Documentation
+│       ├── setup.md            # (merged setup guides)
+│       ├── management.md       # (from improvements/)
+│       └── browser-testing.md  # (from environment/)
+│
+├── agents/                         # Agent Documentation (unchanged)
+│   ├── implementation-steps.md
+│   ├── network-usage.md
+│   ├── workflow-example.md
+│   └── multi-agent-setup.md
+│
+└── improvements/                   # Project Improvements
+    ├── current-progress.txt      # (keep for active tracking)
+    ├── consolidation-tasks.md    # (keep for project planning)
+    └── security-guidelines.md    # (keep for security focus)
+
+MIGRATION STEPS:
+
+1. Create New Structure:
+   ```bash
+   mkdir -p docs/{core,guides/{development,environment}}
+   ```
+
+2. Move and Merge Files:
+   - Move vision/ contents to core/
+   - Merge environment docs
+   - Merge development guides
+   - Remove duplicates
+
+3. Update References:
+   - Fix internal documentation links
+   - Update tool paths
+   - Update git tracking
+
+4. Clean Up:
+   - Remove .backup files
+   - Remove empty directories
+   - Remove test/ directory
+
+5. Update Documentation:
+   - Update table of contents
+   - Fix cross-references
+   - Update file paths in examples
+
+BENEFITS:
+1. Clear Organization:
+   - Logical grouping
+   - Reduced duplication
+   - Better navigation
+
+2. Improved Maintenance:
+   - Single source of truth
+   - Easier updates
+   - Clear ownership
+
+3. Better User Experience:
+   - Clear entry points
+   - Logical progression
+   - Easy to find information
+
+NEXT STEPS:
+1. Create pull request with reorganization
+2. Update documentation tools
+3. Update progress tracking
+4. Remove backup files
+5. Test all documentation links
+
+This reorganization will make the documentation more maintainable and easier to navigate while eliminating duplicates.
