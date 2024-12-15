@@ -12,7 +12,8 @@ async function convertVisionDocs() {
       'quick-start.txt',
       'use-cases.txt',
       'architecture.txt',
-      'development-guide.txt'
+      'development-guide.txt',
+      'project-structure.txt'  // Added project structure doc
     ];
 
     for (const file of filesToConvert) {
