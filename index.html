@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOGI Development System - AI Development Made Simple</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #475569;
+            --background: #f8fafc;
+            --text: #1e293b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text);
+            background: var(--background);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        header {
+            background: white;
+            padding: 2rem 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+            background: linear-gradient(to right, #2563eb, #3b82f6);
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features {
+            padding: 4rem 0;
+            background: white;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            border-radius: 8px;
+            background: var(--background);
+            transition: transform 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .use-cases {
+            padding: 4rem 0;
+        }
+
+        .case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .case-card {
+            padding: 2rem;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .cta {
+            padding: 4rem 0;
+            text-align: center;
+            background: var(--background);
+        }
+
+        .button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .button:hover {
+            background: #1d4ed8;
+        }
+
+        footer {
+            padding: 2rem 0;
+            background: var(--text);
+            color: white;
+            text-align: center;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: var(--text);
+        }
+
+        .code-example {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            font-family: 'Courier New', Courier, monospace;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav>
+                <!-- Add navigation later -->
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>YOGI Development System</h1>
+            <p>Your AI Development Starter Kit - Like a chef's kitchen with all the tools ready to cook up amazing AI applications</p>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2>Why Choose YOGI?</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🚀 Start Fast</h3>
+                    <p>Begin with working templates and focus on your unique features. Launch in days, not weeks.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🎯 Stay Consistent</h3>
+                    <p>Use the same tools, patterns, and practices across all your projects.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>📈 Scale Easy</h3>
+                    <p>Add features as needed, copy working patterns, and share across projects.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="use-cases">
+        <div class="container">
+            <h2>Real-World Use Cases</h2>
+            <div class="case-grid">
+                <div class="case-card">
+                    <h3>🏢 Startups</h3>
+                    <p>Move fast with limited resources. Start with working templates and focus on your unique features.</p>
+                    <div class="code-example">
+                        # Clone and start
+                        git clone yogi-dev-system
+                        cd my-project
+                        npm start
+                    </div>
+                </div>
+                <div class="case-card">
+                    <h3>🎨 Agencies</h3>
+                    <p>Deliver consistent quality across projects. Reuse proven components and maintain consistent style.</p>
+                </div>
+                <div class="case-card">
+                    <h3>🏭 Enterprise</h3>
+                    <p>Maintain standards across departments. Share development environment and enforce best practices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <h2>What's Included?</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🧩 UI Components</h3>
+                    <p>Ready-to-use React components with consistent styling and behavior.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔌 API Templates</h3>
+                    <p>Pre-built interfaces for common AI services and APIs.</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🛠️ Development Tools</h3>
+                    <p>Documentation generators, code converters, and testing utilities.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Ready to Start Building?</h2>
+            <p>Get started with our comprehensive documentation and examples.</p>
+            <a href="docs/vision/quick-start.md" class="button">Quick Start Guide</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>YOGI Development System - Making AI Development Simple and Consistent</p>
+        </div>
+    </footer>
+</body>
+</html>
