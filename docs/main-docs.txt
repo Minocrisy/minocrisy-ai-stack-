@@ -1,74 +1,114 @@
-AI DEVELOPMENT STACK DOCUMENTATION
+# AI Development Stack Documentation
 
-1. CORE SETUP
-- Nix-powered development environment
-- IDX integration for environment management
-- Comprehensive tool suite for AI, web, and cloud development
-- Security-first approach with credential management
+## Core Components
 
-2. AGENT COMMUNICATION FINDINGS
-- Cline API integration works through dev.nix configuration
-- File operations have specific patterns:
-  * .txt files write successfully
-  * Other extensions may show diff editor errors
-  * Files are often created despite error messages
-  * Manual verification is important
+### Development Environment
+- Nix-powered environment management
+- IDX integration
+- Comprehensive tool suite
+- Security-first approach
 
-3. WORKING PRACTICES
-- Keep credentials in local dev.nix files
-- Use templates for sharing configurations
-- Test changes in development environment
-- Verify file changes manually
-- Create new files instead of modifying existing ones
-- Use .txt files for reliable documentation updates
+### File Operations System
+- Safe file operations with FileConverter utility
+- Markdown handling with DocHandler
+- Automatic backup creation
+- Content verification
+- Format conversion support
 
-4. TOOL SUITE
+### Agent Communication
+- Cline API integration
+- Template-based configuration
+- Secure credential handling
+- Task coordination
+
+## Tool Suite
 - Python with AI/ML libraries
 - Node.js and TypeScript
 - Cloud tools (AWS, GCP, Azure)
 - Database tools (MongoDB, PostgreSQL, Redis)
 - Media processing (FFmpeg, OpenCV, ImageMagick)
 - Security tools (GPG, SSH, SOPS)
+- File operation utilities
 
-5. ENVIRONMENT VARIABLES
+## Environment Variables
 - CLINE_API_KEY: Agent communication
 - NOTION_API_KEY: Notion integration
 - TWITTER_API_KEY: Twitter integration
 - GLHF_API_KEY: AI integration
-- Database and cloud platform configurations
+- Database and cloud configurations
 
-6. DEVELOPMENT WORKFLOW
-- Clone repository
-- Copy dev.nix.template to dev.nix
-- Add actual credentials
-- Open in VSCode with IDX
-- Rebuild environment when prompted
-- Test changes thoroughly
-- Update documentation using .txt files
-- Manual conversion to final formats
+## Development Workflow
 
-7. KNOWN ISSUES AND SOLUTIONS
-- VSCode extension UI limitations:
-  * Diff editor errors are common
-  * Files often succeed despite errors
-  * Manual verification needed
-- File operations:
-  * .txt files work reliably
-  * Create new files instead of modifying
-  * Verify all changes
-  * Use list_files to check existence
+### Setup
+1. Clone repository
+2. Copy dev.nix.template to dev.nix
+3. Add actual credentials
+4. Open in VSCode with IDX
+5. Rebuild environment when prompted
 
-8. SECURITY GUIDELINES
+### File Operations
+1. Use FileConverter for safe file operations
+2. Use DocHandler for markdown files
+3. Verify content after changes
+4. Maintain backups
+5. Use proper error handling
+
+### Documentation
+1. Write content as .txt first
+2. Convert to final format
+3. Verify content
+4. Create backups
+5. Update version control
+
+## Known Issues and Solutions
+
+### VSCode Extension UI
+- Diff editor errors are handled by FileConverter
+- Safe write operations ensure reliability
+- Content verification confirms changes
+- Backup system prevents data loss
+
+### File Operations
+- Use provided utilities for all file operations
+- Follow the documented workflow
+- Verify all changes
+- Keep backups
+- Use absolute paths
+
+## Security Guidelines
 - Never commit real API keys
 - Keep sensitive data in local files
 - Use templates for sharing
 - Follow .gitignore rules
 - Regular security audits
 
-9. BEST PRACTICES
+## Best Practices
 - Test all changes in development
 - Document changes immediately
-- Use .txt for documentation drafts
-- Manual verification of all changes
+- Use provided file operation utilities
+- Manual verification when needed
 - Keep backups of important content
 - Regular testing of environment
+
+## Utilities Documentation
+
+### FileConverter
+- Safe file operations
+- Format conversion
+- Content verification
+- Backup creation
+- Error handling
+
+### DocHandler
+- Markdown file management
+- Safe documentation updates
+- Content verification
+- Backup management
+- Error handling
+
+## Testing
+- Automated tests for utilities
+- Manual verification steps
+- Error handling verification
+- Backup system testing
+- Format conversion testing
