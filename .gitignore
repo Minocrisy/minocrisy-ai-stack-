@@ -15,3 +15,17 @@ build/
 .env.*
 .idx/dev.nix
 my-idx-template/.idx/dev.nix
+
+# Test Coverage
+coverage/
+coverage/**/*
+
+# Documentation Backups
+*.md.backup
+
+# Large Project Directories (per handoff doc)
+YOGI/
+tellet/
+yogi-engineer/
+yogi-ui/
+yogicast/

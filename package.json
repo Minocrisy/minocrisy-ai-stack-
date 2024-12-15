@@ -1,0 +1,16 @@
+{
+  "name": "cline-workspace",
+  "version": "1.0.0",
+  "description": "AI Development Stack",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "test": "jest",
+    "docs": "ts-node src/utils/test-file-ops.ts"
+  },
+  "dependencies": {
+    "typescript": "^5.3.3",
+    "ts-node": "^10.9.2",
+    "@types/node": "^20.10.5"
+  }
+}
