@@ -1,13 +1,23 @@
+"use client";
+
 import { cn } from '@/lib/utils';
 import { HTMLAttributes, forwardRef } from 'react';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   variant?: 'default' | 'bordered' | 'elevated';
   padding?: 'none' | 'sm' | 'md' | 'lg';
+  interactive?: boolean;
 }
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ className, variant = 'default', padding = 'md', children, ...props }, ref) => {
+  ({ 
+    className, 
+    variant = 'default', 
+    padding = 'md', 
+    interactive = false,
+    children, 
+    ...props 
+  }, ref) => {
     const baseStyles = 'rounded-lg transition-shadow';
     
     const variants = {
@@ -25,8 +35,18 @@ const Card = forwardRef<HTMLDivElement, CardProps>(
 
     return (
       <div
-        className={cn(baseStyles, variants[variant], paddings[padding], className)}
         ref={ref}
+        className={cn(
+          baseStyles,
+          variants[variant],
+          paddings[padding],
+          interactive && 'hover:shadow-md focus-within:ring-2 focus-within:ring-indigo-500',
+          className
+        )}
+        {...(interactive && {
+          role: 'article',
+          tabIndex: 0,
+        })}
         {...props}
       >
         {children}
@@ -75,7 +95,11 @@ CardDescription.displayName = 'CardDescription';
 
 const CardContent = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
   ({ className, ...props }, ref) => (
-    <div ref={ref} className={cn('pt-0', className)} {...props} />
+    <div 
+      ref={ref} 
+      className={cn('pt-0', className)} 
+      {...props} 
+    />
   )
 );
 
@@ -93,6 +117,18 @@ const CardFooter = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>(
 
 CardFooter.displayName = 'CardFooter';
 
+// Keyboard interaction handler for interactive cards
+const useCardKeyboardInteraction = (onClick?: () => void) => {
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (onClick && (event.key === 'Enter' || event.key === ' ')) {
+      event.preventDefault();
+      onClick();
+    }
+  };
+
+  return { handleKeyDown };
+};
+
 export {
   Card,
   CardHeader,
@@ -100,5 +136,6 @@ export {
   CardDescription,
   CardContent,
   CardFooter,
+  useCardKeyboardInteraction,
   type CardProps,
 };
