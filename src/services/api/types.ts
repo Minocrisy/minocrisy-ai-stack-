@@ -32,6 +32,22 @@ export interface HedraAPI {
   }>;
 }
 
+// Model Management types
+export interface Model {
+  id: string;
+  provider: string;
+  name: string;
+  description?: string;
+  metadata?: {
+    github_url?: string;
+    paper_url?: string;
+    license_url?: string;
+    run_count?: number;
+    cover_image_url?: string;
+  };
+  latestVersion?: ModelVersion;
+}
+
 // Replicate types
 export interface ReplicateModel {
   owner: string;
@@ -61,4 +77,12 @@ export interface ModelVersion {
       };
     };
   };
+}
+
+export interface ModelProvider {
+  name: string;
+  getModel: (id: string) => Promise<Model>;
+  getModels: (query?: string) => Promise<Model[]>;
+  getModelVersions: (modelId: string) => Promise<ModelVersion[]>;
+  runPrediction: (modelId: string, version: string, input: Record<string, any>) => Promise<any>;
 }

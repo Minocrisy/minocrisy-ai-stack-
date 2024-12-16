@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
-import { ReplicateProvider } from './ReplicateContext';
 import { APIProvider } from './APIContext';
+import { ModelManagementProvider } from './ModelManagementContext';
 
 interface RootProviderProps {
   children: ReactNode;
@@ -8,14 +8,14 @@ interface RootProviderProps {
 
 export function RootProvider({ children }: RootProviderProps) {
   return (
-    <ReplicateProvider>
+    <ModelManagementProvider>
       <APIProvider>
         {children}
       </APIProvider>
-    </ReplicateProvider>
+    </ModelManagementProvider>
   );
 }
 
 // Export all context hooks for convenience
-export { useReplicate } from './ReplicateContext';
+export { useModelManagement, useReplicate } from './ModelManagementContext';
 export { useAPI, useGroq, useElevenLabs, useHedra } from './APIContext';

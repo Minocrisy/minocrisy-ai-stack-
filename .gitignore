@@ -13,6 +13,7 @@ build/
 # Environment and Secrets
 .env
 .env.*
+.idx/dev.nix  # Protect credentials file
 
 # Local Development Configuration
 # Ignore local configuration files but track templates

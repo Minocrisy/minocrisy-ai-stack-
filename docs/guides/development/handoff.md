@@ -1,164 +1,155 @@
-AGENT HANDOFF INSTRUCTIONS - FILE OPERATIONS AND DOCUMENTATION UPDATE
+# Agent Handoff Document
 
-1. URGENT ATTENTION NEEDED
+## Current State
 
-GIT STATUS:
-- Currently on 'documentation' branch
-- 1 commit ahead of origin/documentation
-- Modified: .idx/dev.nix.template
-- Multiple untracked directories and files need review
+### 1. Services Layer (services_001)
+**Status**: In Progress
 
-PRIORITY CLEANUP:
-1. Large Project Directories:
-   - YOGI/
-   - tellet/
-   - yogi-engineer/
-   - yogi-ui/
-   - yogicast/
-   These should be in separate repositories
+#### Completed:
+- Unified service interfaces (unified-types.ts)
+- Video service implementation (unified-video.ts)
+- Speech service implementation (unified-speech.ts)
+- Provider abstraction
+- Error handling standardization
+- TypeScript configuration for React/JSX
 
-2. Development Files:
-   - coverage/
-   - src/ directory contents
-   - configuration files (postcss.config.js, etc.)
-   Need to determine which belong in this repository
+#### Pending:
+- Model management implementation
+- Caching layer
+- Monitoring setup
 
-3. Documentation Files:
-   - docs/README.md
-   - docs/handoff-instructions.txt
-   - docs/improvements/consolidation-tasks.txt
-   - docs/test/
-   These need proper organization and commit
+### 2. Documentation (docs_001)
+**Status**: Updated
 
-4. Configuration Files:
-   - .idx/dev.local.nix (should remain untracked)
-   - package.json and related files
+**Location**: docs/core/  
+**Files**:
+- services-implementation.md
+- consolidation-tasks.md
+- current-progress.md
+
+### 3. Configuration Updates
+- Updated tsconfig.json with React/JSX support
+- Added proper type definitions
+- Configured module resolution
+
+## Git Management
+
+### Files to Stage:
+1. **Service Implementations**:
+   - src/services/api/unified-types.ts
+   - src/services/api/unified-video.ts
+   - src/services/api/unified-speech.ts
+
+2. **Documentation**:
+   - docs/core/services-implementation.md
+   - docs/core/consolidation-tasks.md
+   - docs/core/current-progress.md
+
+3. **Utilities**:
+   - src/utils/convert-services-docs.ts
+
+4. **Configuration**:
    - tsconfig.json
-   Need to decide which to track
 
-2. IMPLEMENTED UTILITIES
+### Files to Ignore:
+- .txt versions of documentation (already converted to .md)
+- Any files containing API keys or credentials
+- Temporary build artifacts
 
-FILE OPERATIONS:
-- FileConverter: Safe file operations with backups
-- DocHandler: Markdown-specific operations
-- Test suite: Verified working
+### Commit Messages:
 
-ENVIRONMENT:
-- Node.js from dev.nix
-- Local TypeScript installation
-- Working test configuration
+#### 1. Services Layer:
+\`\`\`
+feat(services): implement unified services layer
 
-3. IMMEDIATE TASKS
+- Add unified service interfaces and types
+- Implement video service with provider abstraction
+- Implement speech service with streaming support
+- Add comprehensive service documentation
+- Update consolidation tasks and progress tracking
 
-REPOSITORY CLEANUP:
-1. Create .gitignore entries for:
-   - Large project directories (YOGI/, tellet/, etc.)
-   - Development artifacts (coverage/, etc.)
-   - Local configuration files (.idx/dev.local.nix)
+Part of services_001
+\`\`\`
 
-2. Review and organize:
-   - src/ directory contents
-   - configuration files
-   - documentation files
+#### 2. TypeScript Configuration:
+\`\`\`
+chore(config): update TypeScript configuration
 
-3. Commit structure:
-   - Documentation updates
-   - Configuration changes
-   - Utility implementations
+- Add React/JSX support
+- Configure module resolution
+- Add necessary type definitions
+- Fix ModelPanel test TypeScript errors
 
-DOCUMENTATION UPDATES:
-1. Convert remaining .txt to .md:
-   - Use DocHandler.updateDoc()
-   - Verify content after conversion
-   - Remove redundant files
+Part of services_001
+\`\`\`
 
-2. Organize documentation:
-   - Core docs in root (README.md, etc.)
-   - Detailed docs in docs/ directory
-   - Remove test files after verification
+## Next Steps for New Agent
 
-4. WORKFLOW CHANGES
+### 1. Model Management Implementation:
+- Use unified-types.ts as reference for interfaces
+- Implement ModelService interface
+- Add provider support for Replicate
+- Add custom model support
+- Follow error handling patterns from video/speech services
 
-FILE OPERATIONS:
-- Use FileConverter for all file operations
-- Use DocHandler for markdown files
-- Always verify content after writes
-- Keep backup files until verified
+### 2. Caching Layer:
+- Design caching strategy for API responses
+- Implement cache invalidation
+- Add cache headers support
+- Consider using Redis/memory cache
 
-DOCUMENTATION:
-- Write initial content as .txt
-- Convert to .md using utilities
-- Verify content and formatting
-- Update references and links
+### 3. Monitoring:
+- Implement service metrics
+- Add request/response logging
+- Set up error tracking
+- Add performance monitoring
 
-GIT MANAGEMENT:
-- Work in documentation branch
-- Clean commits with clear messages
-- Regular pushes to origin
-- Maintain clean repository structure
+### 4. Testing:
+- Add unit tests for model management
+- Implement integration tests
+- Add performance benchmarks
+- Update test documentation
 
-5. TECHNICAL DETAILS
+## Important Notes
 
-UTILITY LOCATIONS:
-/src/utils/
-  - file-converter.ts
-  - doc-handler.ts
-  - test-file-ops.ts
-  - tsconfig.json
+### 1. Environment Variables:
+- Use .env.template for required variables
+- Never commit actual .env files
+- Document new variables in ENVIRONMENT.md
 
-DOCUMENTATION STRUCTURE:
-/docs/
-  - improvements/
-  - agents/
-  - test/
+### 2. API Keys:
+- Store in local dev.nix
+- Use environment variables
+- Follow security guidelines
 
-CONFIGURATION:
-- .idx/dev.nix (template and local)
-- tsconfig.json
-- package.json
+### 3. Testing:
+- Run existing tests before changes
+- Add tests for new functionality
+- Verify browser testing setup
+- Ensure proper TypeScript/Jest configuration
 
-6. NEXT STEPS
+### 4. Documentation:
+- Write new docs as .txt first
+- Use convert-services-docs.ts for conversion
+- Update progress tracking
+- Keep handoff doc current
 
-IMMEDIATE:
-1. Review untracked files and directories
-2. Update .gitignore
-3. Clean up repository structure
-4. Convert remaining documentation
+## Resources
 
-LATER:
-1. Improve documentation organization
-2. Enhance file operation utilities
-3. Add more test coverage
-4. Streamline workflows
+### 1. Code References:
+- src/services/api/* for service patterns
+- src/utils/* for utility functions
+- docs/core/* for architecture details
 
-7. HANDOFF CHECKLIST
+### 2. Documentation:
+- docs/guides/development/* for guidelines
+- docs/core/* for architecture and progress
 
-VERIFY:
-- [ ] Utilities working (confirmed)
-- [ ] Tests passing (confirmed)
-- [ ] Git status reviewed
-- [ ] Documentation structure planned
-- [ ] No sensitive data exposed
+### 3. Testing:
+- jest.config.js for test configuration
+- src/components/__tests__/* for example tests
+- tsconfig.json for TypeScript/React configuration
 
-DOCUMENT:
-- [ ] Current state (done)
-- [ ] Cleanup tasks (listed)
-- [ ] Implementation steps (provided)
-- [ ] Known issues (documented)
-- [ ] Next steps (outlined)
+---
 
-8. NOTES FOR NEXT AGENT
-
-IMPORTANT CONSIDERATIONS:
-1. Large untracked directories should not be committed
-2. Focus on documentation and utility files
-3. Maintain separation of concerns
-4. Keep repository clean and focused
-
-DOCUMENTATION PRIORITY:
-1. Core documentation (README.md, etc.)
-2. Implementation details
-3. Workflow changes
-4. Configuration guides
-
-This handoff provides a clear picture of the current state and necessary tasks, with emphasis on repository cleanup and documentation organization.
+This handoff document provides the context and next steps for continuing the services layer implementation. Follow the established patterns and guidelines while maintaining clean git history and comprehensive documentation.
