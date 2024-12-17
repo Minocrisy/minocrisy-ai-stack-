@@ -11,6 +11,32 @@ export interface GroqAPI {
   chat(messages: Array<{ role: string; content: string }>): Promise<string>;
 }
 
+// OpenRouter API types
+export interface OpenRouterAPI {
+  listModels(): Promise<OpenRouterModel[]>;
+  chat(messages: Array<{ role: string; content: string }>, model: string): Promise<string>;
+  complete(prompt: string, model: string): Promise<string>;
+}
+
+export interface OpenRouterModel {
+  id: string;
+  name: string;
+  description?: string;
+  pricing: {
+    prompt: string;
+    completion: string;
+  };
+  context_length: number;
+  architecture?: {
+    model_type: string;
+    parameters?: number;
+  };
+  provider?: {
+    name: string;
+    status?: string;
+  };
+}
+
 // ElevenLabs API types
 export interface ElevenLabsAPI {
   synthesize(text: string, voiceId: string): Promise<ArrayBuffer>;
@@ -44,6 +70,19 @@ export interface Model {
     license_url?: string;
     run_count?: number;
     cover_image_url?: string;
+    pricing?: {
+      prompt?: string;
+      completion?: string;
+    };
+    context_length?: number;
+    architecture?: {
+      model_type?: string;
+      parameters?: number;
+    };
+    provider_info?: {
+      name?: string;
+      status?: string;
+    };
   };
   latestVersion?: ModelVersion;
 }

@@ -1,222 +1,74 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Button } from './Button';
+import React from 'react';
+import type { PreviewProgress } from '../../types/preview';
 
 interface MediaControlsProps {
-  // Media source
+  type: 'video' | 'audio';
   src?: string;
-  type?: 'audio' | 'video';
-  // Optional custom controls
-  onPlay?: () => void;
-  onPause?: () => void;
-  onStop?: () => void;
-  onVolumeChange?: (volume: number) => void;
-  onSeek?: (time: number) => void;
-  // Optional custom styling
   className?: string;
-  // Optional initial state
-  initialVolume?: number;
-  autoPlay?: boolean;
+  previewState?: PreviewProgress;
+  onError?: (error: Error) => void;
 }
 
 export const MediaControls: React.FC<MediaControlsProps> = ({
+  type,
   src,
-  type = 'audio',
-  onPlay,
-  onPause,
-  onStop,
-  onVolumeChange,
-  onSeek,
   className = '',
-  initialVolume = 1,
-  autoPlay = false,
+  previewState,
+  onError
 }) => {
-  // State for media controls
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [volume, setVolume] = useState(initialVolume);
-  const [isMuted, setIsMuted] = useState(false);
-  const [duration, setDuration] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
+  const isLoading = previewState?.stage !== 'completed' && previewState?.stage !== 'error';
+  const showPlaceholder = !src || isLoading;
 
-  // References
-  const mediaRef = useRef<HTMLAudioElement | HTMLVideoElement | null>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
-
-  // Initialize media element
-  useEffect(() => {
-    if (src && mediaRef.current) {
-      mediaRef.current.volume = volume;
-      if (autoPlay) {
-        mediaRef.current.play().catch(() => {
-          // Autoplay may be blocked by browser
-          setIsPlaying(false);
-        });
-      }
-    }
-  }, [src, volume, autoPlay]);
-
-  // Format time in MM:SS
-  const formatTime = (timeInSeconds: number): string => {
-    const minutes = Math.floor(timeInSeconds / 60);
-    const seconds = Math.floor(timeInSeconds % 60);
-    return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+  const handleMediaError = (e: React.SyntheticEvent<HTMLMediaElement, Event>) => {
+    const error = new Error(`Failed to load ${type}: ${e.currentTarget.error?.message || 'Unknown error'}`);
+    console.error(error);
+    onError?.(error);
   };
 
-  // Handle play/pause
-  const togglePlay = () => {
-    if (!mediaRef.current) return;
+  if (showPlaceholder) {
+    return (
+      <div className={`relative ${className}`}>
+        <div className="bg-gray-100 dark:bg-gray-800 rounded-lg aspect-video flex items-center justify-center">
+          {isLoading ? (
+            <div className="flex flex-col items-center space-y-4">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600" />
+              <p className="text-sm text-gray-500">
+                {previewState?.message || 'Loading...'}
+              </p>
+              {previewState?.progress !== undefined && (
+                <div className="w-48 bg-gray-200 rounded-full h-1.5 dark:bg-gray-700">
+                  <div
+                    className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
+                    style={{ width: `${previewState.progress}%` }}
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            <p className="text-gray-500">No media available</p>
+          )}
+        </div>
+      </div>
+    );
+  }
 
-    if (isPlaying) {
-      mediaRef.current.pause();
-      onPause?.();
-    } else {
-      mediaRef.current.play();
-      onPlay?.();
-    }
-    setIsPlaying(!isPlaying);
-  };
-
-  // Handle stop
-  const handleStop = () => {
-    if (!mediaRef.current) return;
-    
-    mediaRef.current.pause();
-    mediaRef.current.currentTime = 0;
-    setIsPlaying(false);
-    onStop?.();
-  };
-
-  // Handle volume change
-  const handleVolumeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newVolume = parseFloat(e.target.value);
-    if (mediaRef.current) {
-      mediaRef.current.volume = newVolume;
-      setVolume(newVolume);
-      onVolumeChange?.(newVolume);
-    }
-  };
-
-  // Handle mute toggle
-  const toggleMute = () => {
-    if (!mediaRef.current) return;
-    
-    mediaRef.current.muted = !isMuted;
-    setIsMuted(!isMuted);
-  };
-
-  // Handle seek
-  const handleSeek = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!progressRef.current || !mediaRef.current) return;
-
-    const rect = progressRef.current.getBoundingClientRect();
-    const pos = (e.clientX - rect.left) / rect.width;
-    const newTime = pos * duration;
-    
-    mediaRef.current.currentTime = newTime;
-    setCurrentTime(newTime);
-    onSeek?.(newTime);
-  };
-
-  // Media event handlers
-  const handleLoadedMetadata = () => {
-    if (mediaRef.current) {
-      setDuration(mediaRef.current.duration);
-      setIsLoading(false);
-    }
-  };
-
-  const handleTimeUpdate = () => {
-    if (mediaRef.current) {
-      setCurrentTime(mediaRef.current.currentTime);
-    }
-  };
-
-  const handleEnded = () => {
-    setIsPlaying(false);
-    if (mediaRef.current) {
-      mediaRef.current.currentTime = 0;
-    }
-  };
+  if (type === 'video') {
+    return (
+      <video
+        className={`w-full rounded-lg ${className}`}
+        src={src}
+        controls
+        onError={handleMediaError}
+      />
+    );
+  }
 
   return (
-    <div className={`flex flex-col space-y-2 ${className}`}>
-      {/* Media Element */}
-      {type === 'audio' ? (
-        <audio
-          ref={mediaRef as React.RefObject<HTMLAudioElement>}
-          src={src}
-          onLoadedMetadata={handleLoadedMetadata}
-          onTimeUpdate={handleTimeUpdate}
-          onEnded={handleEnded}
-          className="hidden"
-        />
-      ) : (
-        <video
-          ref={mediaRef as React.RefObject<HTMLVideoElement>}
-          src={src}
-          onLoadedMetadata={handleLoadedMetadata}
-          onTimeUpdate={handleTimeUpdate}
-          onEnded={handleEnded}
-          className="w-full rounded-lg"
-        />
-      )}
-
-      {/* Progress Bar */}
-      <div
-        ref={progressRef}
-        onClick={handleSeek}
-        className="h-2 bg-gray-200 dark:bg-gray-700 rounded-full cursor-pointer relative"
-      >
-        <div
-          className="absolute h-full bg-blue-500 rounded-full"
-          style={{ width: `${(currentTime / duration) * 100}%` }}
-        />
-      </div>
-
-      {/* Time Display */}
-      <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-        <span>{formatTime(currentTime)}</span>
-        <span>{formatTime(duration)}</span>
-      </div>
-
-      {/* Controls */}
-      <div className="flex items-center space-x-4">
-        <Button
-          onClick={togglePlay}
-          disabled={isLoading}
-          variant="outline"
-          className="w-12 h-12 rounded-full"
-        >
-          {isPlaying ? '⏸️' : '▶️'}
-        </Button>
-
-        <Button
-          onClick={handleStop}
-          disabled={isLoading}
-          variant="outline"
-          className="w-12 h-12 rounded-full"
-        >
-          ⏹️
-        </Button>
-
-        <Button
-          onClick={toggleMute}
-          variant="outline"
-          className="w-12 h-12 rounded-full"
-        >
-          {isMuted ? '🔇' : '🔊'}
-        </Button>
-
-        <input
-          type="range"
-          min="0"
-          max="1"
-          step="0.1"
-          value={volume}
-          onChange={handleVolumeChange}
-          className="w-24 h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer"
-        />
-      </div>
-    </div>
+    <audio
+      className={`w-full ${className}`}
+      src={src}
+      controls
+      onError={handleMediaError}
+    />
   );
 };

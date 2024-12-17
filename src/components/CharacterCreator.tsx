@@ -7,7 +7,7 @@ import { MediaControls } from './ui/MediaControls';
 import { ModelSelector } from './ModelSelector';
 import { useAPI } from '../contexts/APIContext';
 import type { ReplicateModel, ModelVersion } from '../services/api/types';
-import type { VideoGenerationOptions } from '../services/api/video';
+import type { PreviewProgress, PreviewUpdate } from '../types/preview';
 
 interface Character {
   name: string;
@@ -19,8 +19,8 @@ interface Character {
 }
 
 export const CharacterCreator: React.FC = () => {
-  const { video, elevenLabs } = useAPI();
-  
+  const { contentCreation, elevenLabs } = useAPI();
+
   const [character, setCharacter] = useState<Character>({
     name: '',
     voice: '',
@@ -34,6 +34,10 @@ export const CharacterCreator: React.FC = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string>('');
   const [voices, setVoices] = useState<Array<{ voice_id: string; name: string }>>([]);
+  const [previewProgress, setPreviewProgress] = useState<PreviewProgress>({
+    stage: 'idle',
+    progress: 0
+  });
 
   // Load available voices
   useEffect(() => {
@@ -63,6 +67,40 @@ export const CharacterCreator: React.FC = () => {
     { value: 'relaxed', label: 'Relaxed' }
   ];
 
+  // Handle preview updates
+  const handlePreviewUpdate = (update: PreviewUpdate) => {
+    const { type, data } = update;
+
+    switch (type) {
+      case 'progress':
+        setPreviewProgress(prev => ({
+          ...prev,
+          stage: data.stage || prev.stage,
+          progress: data.progress || prev.progress,
+          message: data.message
+        }));
+        if (data.previewUrl) {
+          setPreviewUrl(data.previewUrl);
+        }
+        break;
+
+      case 'preview':
+        if (data.previewUrl) {
+          setPreviewUrl(data.previewUrl);
+        }
+        break;
+
+      case 'error':
+        setError(data.error || 'An error occurred');
+        setPreviewProgress(prev => ({
+          ...prev,
+          stage: 'error',
+          message: data.error
+        }));
+        break;
+    }
+  };
+
   // Handle input changes
   const handleChange = (field: keyof Omit<Character, 'model' | 'modelVersion'>, value: string) => {
     setCharacter(prev => ({
@@ -78,28 +116,42 @@ export const CharacterCreator: React.FC = () => {
     try {
       setIsGenerating(true);
       setError('');
+      setPreviewProgress({ stage: 'preparing', progress: 0 });
 
       // Validate required fields
       if (!character.name || !character.model || !character.modelVersion || !character.animation) {
         throw new Error('Please fill in all required fields');
       }
 
-      // Generate video preview using selected model and animation
-      const options: VideoGenerationOptions = {
-        provider: 'replicate',
-        model: {
-          replicate: {
-            model: character.model,
-            version: character.modelVersion
-          }
-        },
-        prompt: `${character.name} ${character.animation} animation, ${character.appearance} style`
-      };
+      // Generate character using content creation service
+      const result = await contentCreation.generateCharacter({
+        name: character.name,
+        voice: character.voice,
+        model: character.model,
+        modelVersion: character.modelVersion,
+        appearance: character.appearance,
+        animation: character.animation,
+        preview: {
+          onUpdate: handlePreviewUpdate,
+          enableRealTimeUpdates: true,
+          quality: 'preview'
+        }
+      });
 
-      const result = await video.generateVideo(options);
-      setPreviewUrl(result);
+      setPreviewUrl(result.url);
+      setPreviewProgress({
+        stage: 'completed',
+        progress: 100,
+        message: 'Character generation complete!'
+      });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
+      setPreviewProgress({
+        stage: 'error',
+        progress: 0,
+        message: errorMessage
+      });
     } finally {
       setIsGenerating(false);
     }
@@ -111,6 +163,16 @@ export const CharacterCreator: React.FC = () => {
       ...prev,
       model,
       modelVersion: version
+    }));
+  };
+
+  // Handle media error
+  const handleMediaError = (error: Error) => {
+    setError(error.message);
+    setPreviewProgress(prev => ({
+      ...prev,
+      stage: 'error',
+      message: error.message
     }));
   };
 
@@ -196,20 +258,14 @@ export const CharacterCreator: React.FC = () => {
         {/* Preview Section */}
         <div className="space-y-4">
           <h3 className="text-xl font-semibold mb-2">Preview</h3>
-          
-          {previewUrl ? (
-            <MediaControls
-              type="video"
-              src={previewUrl}
-              className="w-full"
-            />
-          ) : (
-            <div className="bg-gray-100 dark:bg-gray-800 rounded-lg h-64 flex items-center justify-center">
-              <p className="text-gray-500">
-                {isGenerating ? 'Generating preview...' : 'Generate a preview to see your character'}
-              </p>
-            </div>
-          )}
+
+          <MediaControls
+            type="video"
+            src={previewUrl}
+            className="w-full"
+            previewState={previewProgress}
+            onError={handleMediaError}
+          />
         </div>
       </div>
     </Card>

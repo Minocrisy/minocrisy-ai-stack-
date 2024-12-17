@@ -5,6 +5,7 @@ import {
   hedraService,
   videoService,
   speechService,
+  contentCreationService,
 } from '../services/api';
 import type {
   GroqAPI,
@@ -13,6 +14,17 @@ import type {
   VideoAPI,
   SpeechAPI,
 } from '../services/api';
+import type {
+  PodcastGenerationOptions,
+  CharacterGenerationOptions,
+  ContentCreationResult
+} from '../services/api/content-creation';
+
+interface ContentCreationAPI {
+  generatePodcast: (options: PodcastGenerationOptions) => Promise<ContentCreationResult>;
+  generateVideo: (prompt: string, options?: any) => Promise<ContentCreationResult>;
+  generateCharacter: (options: CharacterGenerationOptions) => Promise<ContentCreationResult>;
+}
 
 interface APIContextValue {
   groq: GroqAPI;
@@ -20,6 +32,7 @@ interface APIContextValue {
   hedra: HedraAPI;
   video: VideoAPI;
   speech: SpeechAPI;
+  contentCreation: ContentCreationAPI;
 }
 
 export const APIContext = createContext<APIContextValue | null>(null);
@@ -31,6 +44,7 @@ export function APIProvider({ children }: { children: ReactNode }) {
     hedra: hedraService,
     video: videoService,
     speech: speechService,
+    contentCreation: contentCreationService,
   };
 
   return (
@@ -67,4 +81,8 @@ export function useVideo() {
 
 export function useSpeech() {
   return useAPI().speech;
+}
+
+export function useContentCreation() {
+  return useAPI().contentCreation;
 }

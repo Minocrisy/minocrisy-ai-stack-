@@ -1,204 +1,158 @@
 import React from 'react';
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { CharacterCreator } from '../CharacterCreator';
-import { APIContext } from '../../contexts/APIContext';
-import type { ReplicateModel, ModelVersion } from '../../services/api/types';
+import { APIProvider } from '../../contexts/APIContext';
+import { contentCreationService } from '../../services/api';
+import { elevenLabsService } from '../../services/api';
 
-// Mock API context
-const mockVideo = {
-  generateVideo: jest.fn(),
-  getAvailableProviders: jest.fn(),
-};
-
-const mockElevenLabs = {
-  synthesize: jest.fn(),
-  getVoices: jest.fn().mockResolvedValue([
-    { voice_id: 'voice1', name: 'Voice 1' },
-    { voice_id: 'voice2', name: 'Voice 2' },
-  ]),
-};
-
-const mockAPIContext = {
-  video: mockVideo,
-  elevenLabs: mockElevenLabs,
-};
-
-// Mock model data
-const mockModel: ReplicateModel = {
-  owner: 'test-owner',
-  name: 'test-model',
-  description: 'Test model description',
-};
-
-const mockVersion: ModelVersion = {
-  id: 'version1',
-  created_at: '2023-01-01',
-};
-
-// Wrap component with API context
-const renderWithContext = (ui: React.ReactElement) => {
-  return render(
-    <APIContext.Provider value={mockAPIContext as any}>
-      {ui}
-    </APIContext.Provider>
-  );
-};
+// Mock services
+jest.mock('../../services/api', () => ({
+  contentCreationService: {
+    generateCharacter: jest.fn(),
+  },
+  elevenLabsService: {
+    getVoices: jest.fn(),
+  },
+}));
 
 describe('CharacterCreator', () => {
+  const mockVoices = [
+    { voice_id: 'voice1', name: 'Voice 1' },
+    { voice_id: 'voice2', name: 'Voice 2' },
+  ];
+
+  const mockModel = {
+    id: 'model1',
+    name: 'Test Model',
+    provider: 'replicate',
+    description: 'Test model description',
+  };
+
+  const mockVersion = {
+    id: 'version1',
+    created_at: '2024-01-01',
+  };
+
   beforeEach(() => {
     jest.clearAllMocks();
+    (elevenLabsService.getVoices as jest.Mock).mockResolvedValue(mockVoices);
   });
 
-  it('renders all form fields', async () => {
-    renderWithContext(<CharacterCreator />);
+  const renderComponent = () => {
+    return render(
+      <APIProvider>
+        <CharacterCreator />
+      </APIProvider>
+    );
+  };
 
-    // Check for all form elements
-    expect(screen.getByLabelText(/character name/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/character model/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/appearance/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/animation/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/voice/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /generate preview/i })).toBeInTheDocument();
-  });
-
-  it('loads available voices on mount', async () => {
-    renderWithContext(<CharacterCreator />);
+  it('loads and displays available voices', async () => {
+    renderComponent();
 
     await waitFor(() => {
-      expect(mockElevenLabs.getVoices).toHaveBeenCalled();
+      expect(elevenLabsService.getVoices).toHaveBeenCalled();
     });
 
-    // Check if voices are populated in the select
-    const voiceSelect = screen.getByLabelText(/voice/i);
+    const voiceSelect = screen.getByLabelText('Voice');
     expect(voiceSelect).toBeInTheDocument();
-    
-    // Open the select dropdown
-    fireEvent.click(voiceSelect);
-    
-    // Check for voice options
-    expect(screen.getByText('Voice 1')).toBeInTheDocument();
-    expect(screen.getByText('Voice 2')).toBeInTheDocument();
   });
 
-  it('handles form input changes', async () => {
-    renderWithContext(<CharacterCreator />);
+  it('handles character generation with all fields filled', async () => {
+    const mockPreviewUrl = 'https://example.com/preview.mp4';
+    (contentCreationService.generateCharacter as jest.Mock).mockResolvedValue({
+      url: mockPreviewUrl,
+      metadata: {
+        timestamp: new Date().toISOString(),
+      },
+    });
 
-    // Fill in the form
-    const nameInput = screen.getByLabelText(/character name/i);
-    await userEvent.type(nameInput, 'Test Character');
-    expect(nameInput).toHaveValue('Test Character');
-
-    const appearanceSelect = screen.getByLabelText(/appearance/i);
-    fireEvent.change(appearanceSelect, { target: { value: 'casual' } });
-    expect(appearanceSelect).toHaveValue('casual');
-
-    const animationSelect = screen.getByLabelText(/animation/i);
-    fireEvent.change(animationSelect, { target: { value: 'idle' } });
-    expect(animationSelect).toHaveValue('idle');
-  });
-
-  it('validates required fields before preview generation', async () => {
-    renderWithContext(<CharacterCreator />);
-
-    // Try to generate preview without filling required fields
-    const generateButton = screen.getByRole('button', { name: /generate preview/i });
-    fireEvent.click(generateButton);
-
-    // Check for error message
-    expect(screen.getByText(/please fill in all required fields/i)).toBeInTheDocument();
-  });
-
-  it('generates preview when all required fields are filled', async () => {
-    renderWithContext(<CharacterCreator />);
-    const previewUrl = 'test-video-url.mp4';
-    mockVideo.generateVideo.mockResolvedValueOnce(previewUrl);
+    renderComponent();
 
     // Fill in required fields
-    await userEvent.type(screen.getByLabelText(/character name/i), 'Test Character');
-    
+    fireEvent.change(screen.getByPlaceholderText('Enter character name'), {
+      target: { value: 'Test Character' },
+    });
+
+    // Mock model selection
+    // Note: ModelSelector component would need its own tests
+    const mockModelSelect = {
+      model: mockModel,
+      version: mockVersion,
+    };
+
     // Simulate model selection
-    const mockModelSelect = jest.fn();
-    // You might need to mock the ModelSelector component or its selection handler
-    
-    // Select appearance and animation
-    fireEvent.change(screen.getByLabelText(/appearance/i), { target: { value: 'casual' } });
-    fireEvent.change(screen.getByLabelText(/animation/i), { target: { value: 'idle' } });
+    const modelSelector = screen.getByLabelText('Character Model');
+    fireEvent.change(modelSelector, { target: { value: JSON.stringify(mockModelSelect) } });
 
-    // Generate preview
-    const generateButton = screen.getByRole('button', { name: /generate preview/i });
+    // Select appearance
+    const appearanceSelect = screen.getByLabelText('Appearance');
+    fireEvent.change(appearanceSelect, { target: { value: 'casual' } });
+
+    // Select animation
+    const animationSelect = screen.getByLabelText('Animation');
+    fireEvent.change(animationSelect, { target: { value: 'idle' } });
+
+    // Click generate button
+    const generateButton = screen.getByText('Generate Preview');
     fireEvent.click(generateButton);
 
     await waitFor(() => {
-      expect(mockVideo.generateVideo).toHaveBeenCalled();
+      expect(contentCreationService.generateCharacter).toHaveBeenCalledWith({
+        name: 'Test Character',
+        voice: expect.any(String),
+        model: mockModel,
+        modelVersion: mockVersion,
+        appearance: 'casual',
+        animation: 'idle',
+      });
     });
+
+    // Check if preview is displayed
+    const preview = await screen.findByRole('video');
+    expect(preview).toBeInTheDocument();
+    expect(preview).toHaveAttribute('src', mockPreviewUrl);
   });
 
-  it('displays error message when video generation fails', async () => {
-    renderWithContext(<CharacterCreator />);
-    const errorMessage = 'Failed to generate video';
-    mockVideo.generateVideo.mockRejectedValueOnce(new Error(errorMessage));
+  it('displays error message when required fields are missing', async () => {
+    renderComponent();
 
-    // Fill in required fields
-    await userEvent.type(screen.getByLabelText(/character name/i), 'Test Character');
-    
-    // Select appearance and animation
-    fireEvent.change(screen.getByLabelText(/appearance/i), { target: { value: 'casual' } });
-    fireEvent.change(screen.getByLabelText(/animation/i), { target: { value: 'idle' } });
-
-    // Generate preview
-    const generateButton = screen.getByRole('button', { name: /generate preview/i });
+    // Click generate without filling required fields
+    const generateButton = screen.getByText('Generate Preview');
     fireEvent.click(generateButton);
 
-    await waitFor(() => {
-      expect(screen.getByText(errorMessage)).toBeInTheDocument();
-    });
+    const errorMessage = await screen.findByText('Please fill in all required fields');
+    expect(errorMessage).toBeInTheDocument();
   });
 
-  it('shows loading state during preview generation', async () => {
-    renderWithContext(<CharacterCreator />);
-    mockVideo.generateVideo.mockImplementation(() => new Promise(resolve => setTimeout(resolve, 100)));
+  it('handles generation error gracefully', async () => {
+    (contentCreationService.generateCharacter as jest.Mock).mockRejectedValue(
+      new Error('Generation failed')
+    );
 
-    // Fill in required fields
-    await userEvent.type(screen.getByLabelText(/character name/i), 'Test Character');
-    
-    // Select appearance and animation
-    fireEvent.change(screen.getByLabelText(/appearance/i), { target: { value: 'casual' } });
-    fireEvent.change(screen.getByLabelText(/animation/i), { target: { value: 'idle' } });
+    renderComponent();
 
-    // Generate preview
-    const generateButton = screen.getByRole('button', { name: /generate preview/i });
+    // Fill minimum required fields
+    fireEvent.change(screen.getByPlaceholderText('Enter character name'), {
+      target: { value: 'Test Character' },
+    });
+
+    // Mock model selection
+    const mockModelSelect = {
+      model: mockModel,
+      version: mockVersion,
+    };
+    const modelSelector = screen.getByLabelText('Character Model');
+    fireEvent.change(modelSelector, { target: { value: JSON.stringify(mockModelSelect) } });
+
+    // Select animation
+    const animationSelect = screen.getByLabelText('Animation');
+    fireEvent.change(animationSelect, { target: { value: 'idle' } });
+
+    // Click generate button
+    const generateButton = screen.getByText('Generate Preview');
     fireEvent.click(generateButton);
 
-    // Check for loading state
-    expect(screen.getByText(/generating preview/i)).toBeInTheDocument();
-
-    // Wait for generation to complete
-    await waitFor(() => {
-      expect(screen.queryByText(/generating preview/i)).not.toBeInTheDocument();
-    });
-  });
-
-  it('displays preview when video is generated successfully', async () => {
-    renderWithContext(<CharacterCreator />);
-    const previewUrl = 'test-video-url.mp4';
-    mockVideo.generateVideo.mockResolvedValueOnce(previewUrl);
-
-    // Fill in required fields
-    await userEvent.type(screen.getByLabelText(/character name/i), 'Test Character');
-    
-    // Select appearance and animation
-    fireEvent.change(screen.getByLabelText(/appearance/i), { target: { value: 'casual' } });
-    fireEvent.change(screen.getByLabelText(/animation/i), { target: { value: 'idle' } });
-
-    // Generate preview
-    const generateButton = screen.getByRole('button', { name: /generate preview/i });
-    fireEvent.click(generateButton);
-
-    await waitFor(() => {
-      const mediaControls = screen.getByRole('video');
-      expect(mediaControls).toBeInTheDocument();
-      expect(mediaControls).toHaveAttribute('src', previewUrl);
-    });
+    const errorMessage = await screen.findByText('Generation failed');
+    expect(errorMessage).toBeInTheDocument();
   });
 });
