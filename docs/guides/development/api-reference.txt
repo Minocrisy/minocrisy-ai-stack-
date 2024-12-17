@@ -1,0 +1,119 @@
+API REFERENCE GUIDE
+
+1. CONTENT CREATION API
+Description: Unified service for generating various types of content including videos, podcasts, and characters.
+
+Methods:
+
+a) generateCharacter
+   Purpose: Generate a character with video preview and optional voice
+   Parameters:
+   - name: string (Character name)
+   - voice: string (ElevenLabs voice ID)
+   - model: ReplicateModel (Character generation model)
+   - modelVersion: ModelVersion (Model version to use)
+   - appearance: string (Character appearance style)
+   - animation: string (Character animation type)
+   Returns: ContentCreationResult {
+     url: string (Preview URL)
+     metadata: {
+       timestamp: string
+       duration?: number
+       format?: string
+       quality?: number
+     }
+   }
+
+b) generatePodcast
+   Purpose: Generate podcast content with optional background effects
+   Parameters:
+   - script: string (Podcast script)
+   - voice: string (ElevenLabs voice ID)
+   - background?: {
+       music?: string
+       effects?: string[]
+     }
+   - format?: 'mp3' | 'wav'
+   - quality?: number (0-100)
+   Returns: ContentCreationResult
+
+c) generateVideo
+   Purpose: Generate video content with enhanced prompts
+   Parameters:
+   - prompt: string (Video description)
+   - options?: {
+       provider?: 'replicate' | 'hunyuan'
+       model?: {...}
+     }
+   Returns: ContentCreationResult
+
+2. MODEL MANAGEMENT API
+Description: Unified interface for managing AI models across different providers.
+
+Methods:
+
+a) getModel
+   Purpose: Get specific model details
+   Parameters:
+   - provider: string (e.g., 'openrouter', 'replicate')
+   - id: string (Model ID)
+   Returns: Model
+
+b) getModels
+   Purpose: List available models
+   Parameters:
+   - provider: string
+   - query?: string (Search query)
+   Returns: Model[]
+
+c) runPrediction
+   Purpose: Execute model prediction
+   Parameters:
+   - provider: string
+   - modelId: string
+   - version: string
+   - input: Record<string, any>
+   Returns: Promise<any>
+
+3. UNIFIED VIDEO API
+Description: Interface for video processing and generation.
+
+Methods:
+
+a) generateVideo
+   Purpose: Generate video content
+   Parameters:
+   - options: VideoGenerationOptions
+   Returns: string (Video URL)
+
+b) processVideo
+   Purpose: Process existing video
+   Parameters:
+   - input: string (Video URL)
+   - options: VideoProcessingOptions
+   Returns: string (Processed video URL)
+
+4. UNIFIED SPEECH API
+Description: Interface for speech synthesis and recognition.
+
+Methods:
+
+a) synthesize
+   Purpose: Convert text to speech
+   Parameters:
+   - text: string
+   - options: SpeechSynthesisOptions
+   Returns: ArrayBuffer
+
+b) recognize
+   Purpose: Convert speech to text
+   Parameters:
+   - options: SpeechRecognitionOptions
+   Returns: string
+
+USAGE EXAMPLES:
+
+1. Character Creation:
+```typescript
+const result = await contentCreation.generateCharacter({
+  name: "Assistant",

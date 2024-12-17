@@ -18,6 +18,7 @@
     "@types/node": "^20.10.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.3.5",
     "replicate": "^1.0.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
@@ -29,7 +30,7 @@
     "@babel/preset-typescript": "^7.26.0",
     "@testing-library/jest-dom": "^6.1.0",
     "@testing-library/react": "^14.1.0",
-    "@testing-library/user-event": "^14.5.0",
+    "@testing-library/user-event": "^14.5.2",
     "@types/jest": "^29.5.14",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
