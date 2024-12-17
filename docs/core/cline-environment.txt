@@ -1,0 +1,132 @@
+CLINE DEVELOPMENT ENVIRONMENT GUIDE
+====================================
+
+This guide explains how to use the Cline development environment template and what to expect when starting a new project.
+
+GETTING STARTED
+--------------
+1. Clone the template:
+   git clone [repository-url] my-project
+   cd my-project
+
+2. Initialize the environment:
+   - Open VSCode
+   - The environment will automatically initialize
+   - Wait for the Cline environment review to complete
+
+ENVIRONMENT REVIEW
+-----------------
+On startup, Cline performs a comprehensive environment review that provides:
+
+1. Project Structure Overview
+   - Directory tree visualization
+   - Key component listing
+   - API service inventory
+   - Documentation structure
+
+2. Technical Context
+   - Project dependencies
+   - Environment variables
+   - Git branch information
+   - Recent changes
+
+3. Development Status
+   - Current tasks from consolidation-tasks.txt
+   - System tool versions
+   - Environment configuration
+
+AVAILABLE COMPONENTS
+-------------------
+The template includes several pre-configured components:
+
+1. UI Components
+   - DragDrop: File upload with preview
+   - MediaControls: Advanced media playback
+   - ParameterControl: Model parameter tuning
+   - Other base components (Button, Input, etc.)
+
+2. API Services
+   - Model management
+   - Content creation
+   - Speech synthesis
+   - Video processing
+
+3. Development Tools
+   - TypeScript configuration
+   - Testing setup
+   - Documentation structure
+   - Build system
+
+WORKING WITH CLINE
+-----------------
+1. Environment Understanding
+   - Cline automatically analyzes the project structure
+   - Reviews available components and services
+   - Monitors development tasks and progress
+
+2. Development Workflow
+   - Use 'docs/core/consolidation-tasks.txt' for task tracking
+   - Commit changes regularly
+   - Keep documentation updated
+
+3. Best Practices
+   - Follow the established project structure
+   - Use provided UI components
+   - Maintain type safety
+   - Write tests for new features
+
+TEMPLATE STRUCTURE
+-----------------
+Key directories and their purposes:
+
+/src
+  /components     - React components
+  /components/ui  - Reusable UI components
+  /contexts       - React contexts
+  /services       - API services
+  /styles         - Global styles
+  /types         - TypeScript definitions
+  /utils         - Utility functions
+
+/docs
+  /core          - Core documentation
+  /guides        - Development guides
+  /agents        - Agent documentation
+
+CONFIGURATION
+------------
+1. Environment Variables
+   - Set up in .idx/dev.local.nix
+   - Includes API keys and service configurations
+   - Development environment settings
+
+2. Build Configuration
+   - TypeScript configuration in tsconfig.json
+   - Build settings in vite.config.ts
+   - Test setup in jest.config.cjs
+
+TROUBLESHOOTING
+--------------
+1. Environment Issues
+   - Check system tool versions
+   - Verify environment variables
+   - Review error messages in terminal
+
+2. Common Solutions
+   - Rebuild environment: Reopen VSCode
+   - Clear caches: Remove node_modules
+   - Update dependencies: npm install
+
+GETTING HELP
+-----------
+1. Documentation
+   - Check /docs directory
+   - Review component tests for usage examples
+   - Consult API documentation
+
+2. Development Support
+   - Use Cline for assistance
+   - Check git history for examples
+   - Review consolidation tasks
+
+Remember: The environment is designed to be self-documenting and maintainable. Use the provided tools and structure to keep your project organized and efficient.
