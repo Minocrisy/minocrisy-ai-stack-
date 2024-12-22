@@ -1,11 +1,12 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./index.html",
     "./src/components/**/*.{js,ts,jsx,tsx}",
     "./src/pages/**/*.{js,ts,jsx,tsx}",
-    "!./src/**/*.test.{js,ts,jsx,tsx}",
-    "!./src/**/__tests__/**/*"
+    "./src/contexts/**/*.{js,ts,jsx,tsx}",
+    "!**/*.test.{js,ts,jsx,tsx}",
+    "!**/__tests__/**"
   ],
   darkMode: 'class', // Enable dark mode with class strategy
   theme: {

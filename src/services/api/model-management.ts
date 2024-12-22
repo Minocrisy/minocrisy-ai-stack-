@@ -1,5 +1,100 @@
 import type { ReplicateModel, ModelVersion, Model, ModelProvider, OpenRouterModel } from './types';
 import { openRouterService } from './openrouter';
+import { groqService } from './groq';
+
+class GroqProvider implements ModelProvider {
+  name = 'groq';
+  private readonly models = [
+    {
+      id: 'mixtral-8x7b-32768',
+      name: 'Mixtral 8x7B 32K',
+      description: 'Mixtral 8x7B with 32K context window',
+      metadata: {
+        context_length: 32768,
+        architecture: {
+          model_type: 'mixtral',
+          parameters: 46700000000
+        }
+      }
+    },
+    {
+      id: 'llama2-70b-4096',
+      name: 'LLaMA2 70B',
+      description: 'Meta\'s LLaMA2 70B parameter model',
+      metadata: {
+        context_length: 4096,
+        architecture: {
+          model_type: 'llama2',
+          parameters: 70000000000
+        }
+      }
+    }
+  ];
+
+  async getModel(id: string): Promise<Model> {
+    const model = this.models.find(m => m.id === id);
+    if (!model) {
+      throw new ModelManagementError(
+        `Model '${id}' not found`,
+        'MODEL_NOT_FOUND',
+        this.name
+      );
+    }
+    return this.convertGroqModel(model);
+  }
+
+  async getModels(query?: string): Promise<Model[]> {
+    if (query) {
+      const lowerQuery = query.toLowerCase();
+      return this.models
+        .filter(m =>
+          m.name.toLowerCase().includes(lowerQuery) ||
+          m.description?.toLowerCase().includes(lowerQuery)
+        )
+        .map(this.convertGroqModel.bind(this));
+    }
+    return this.models.map(this.convertGroqModel.bind(this));
+  }
+
+  async getModelVersions(modelId: string): Promise<ModelVersion[]> {
+    // Groq doesn't expose version information, return current as only version
+    await this.getModel(modelId); // Validates model exists
+    return [{
+      id: modelId,
+      created_at: new Date().toISOString(),
+    }];
+  }
+
+  async runPrediction(
+    modelId: string,
+    _version: string,
+    input: Record<string, any>
+  ): Promise<any> {
+    await this.getModel(modelId); // Validates model exists
+
+    if (input.messages) {
+      return groqService.chat(input.messages);
+    } else if (input.prompt) {
+      return groqService.complete(input.prompt);
+    }
+    throw new ModelManagementError(
+      'Input must contain either messages or prompt',
+      'INVALID_INPUT',
+      this.name
+    );
+  }
+
+  private convertGroqModel(model: any): Model {
+    return {
+      id: model.id,
+      provider: this.name,
+      name: model.name,
+      description: model.description,
+      metadata: model.metadata
+    };
+  }
+}
+
 
 // Cache manager for model data
 class CacheManager {
@@ -257,6 +352,7 @@ export class ModelManagementService {
     // Register default providers
     this.registerProvider(new ReplicateProvider());
     this.registerProvider(new OpenRouterProvider());
+    this.registerProvider(new GroqProvider());
   }
 
   registerProvider(provider: ModelProvider): void {

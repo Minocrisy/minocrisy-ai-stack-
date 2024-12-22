@@ -2,21 +2,27 @@ import React from 'react';
 import { Button, Input, Card, Badge } from '../components/ui';
 import { Layout, HeaderTitle, HeaderActions } from '../components/Layout';
 import ImageGenerator from '../components/ImageGenerator';
+import { UnifiedModelPanel } from '../components/UnifiedModelPanel';
 
 export const ExamplePage = () => {
   return (
     <Layout
       header={
         <>
-          <HeaderTitle>YOGI UI Components</HeaderTitle>
+          <HeaderTitle>YOGI Ecosystem</HeaderTitle>
           <HeaderActions>
-            <Button variant="primary" size="sm">Action</Button>
-            <Button variant="secondary" size="sm">Another Action</Button>
+            <Badge variant="success">Connected</Badge>
+            <Button variant="primary" size="sm">Settings</Button>
           </HeaderActions>
         </>
       }
     >
       <div className="p-6 space-y-8">
+        <section>
+          <h2 className="text-xl font-semibold mb-4">Model Management</h2>
+          <UnifiedModelPanel />
+        </section>
+
         <section>
           <h2 className="text-xl font-semibold mb-4">Image Generation</h2>
           <ImageGenerator onImageGenerated={url => console.log('Generated image:', url)} />
@@ -24,7 +30,7 @@ export const ExamplePage = () => {
 
         <section>
           <h2 className="text-xl font-semibold mb-4">Basic Components</h2>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <div className="p-4">

@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { ExamplePage } from './pages/ExamplePage';
-import { ReplicateProvider } from './contexts/ReplicateContext';
+import { ModelManagementProvider } from './contexts/ModelManagementContext';
 import './styles/globals.css';
 
 const container = document.getElementById('root');
@@ -10,8 +10,8 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <ReplicateProvider>
+    <ModelManagementProvider>
       <ExamplePage />
-    </ReplicateProvider>
+    </ModelManagementProvider>
   </React.StrictMode>
 );
