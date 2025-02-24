@@ -1,103 +1,102 @@
 # Master development environment configuration
 # Maintained at: ~/my-idx-template/dev.nix
-# Last updated: 2024
-# Purpose: Complete AI, Web, and Cloud development environment with Agent Network support
+# Last updated: 2025
+# Purpose: Complete AI, Web, and Cloud development environment for Minocrisy's Talking Head Avatar
 
 { pkgs, ... }: {
-  channel = "stable-23.11";
+  channel = "stable-24.05";  # Updated to latest stable for broader support, matching IDX recommendations
 
   packages = [
-    # Core Development
+    # Core Development (Existing)
     pkgs.nodejs_20
-    pkgs.python311
-    pkgs.python311Packages.pip
+    pkgs.python311  # Use Python 3.11 for stability and compatibility with Flask, requests
+    pkgs.python311Packages.pip  # For installing Python packages in Nix environment
+    pkgs.python311Packages.requests  # For API calls to ElevenLabs, DALL-E, RunwayML, etc.
+    pkgs.python311Packages.flask  # For the web server hosting the talking head tool
     pkgs.go
     pkgs.git
     pkgs.ripgrep
     pkgs.jq
 
-    # Build & Deploy
+    # Build & Deploy (Existing)
     pkgs.docker
     pkgs.docker-compose
     pkgs.kubectl
     pkgs.terraform
     pkgs.nginx
 
-    # Database Tools
+    # Database Tools (Existing, but MongoDB paused/deletable for Minocrisy)
     pkgs.mongodb-tools
     pkgs.mongosh
     pkgs.postgresql   # PostgreSQL client
     pkgs.redis       # Redis client
 
-    # Cloud & Infrastructure
-    pkgs.google-cloud-sdk
+    # Cloud & Infrastructure (Existing)
+    pkgs.google-cloud-sdk  # For deploying to Google Cloud (e.g., App Engine for web app)
     pkgs.awscli2     # AWS CLI
     pkgs.azure-cli   # Azure CLI
 
-    # Media & Processing
-    pkgs.ffmpeg
+    # Media & Processing (Existing, useful for video/audio in talking head)
+    pkgs.ffmpeg      # For audio/video processing, if needed for RunwayML output
     pkgs.opencv
     pkgs.imagemagick
     pkgs.vips        # For sharp image processing
 
-    # Security & Authentication
+    # Security & Authentication (Existing)
     pkgs.gh
     pkgs.gnupg
     pkgs.openssh
     pkgs.sops        # Secrets management
 
-    # Development Tools
+    # Development Tools (Existing)
     pkgs.curl
     pkgs.poetry
     pkgs.rust-analyzer
     pkgs.rustc
     pkgs.cargo
 
-    # Language Support
+    # Language Support (Existing)
     pkgs.python311Packages.python-lsp-server
     pkgs.nodePackages.typescript-language-server
     pkgs.gopls
     pkgs.rust-analyzer
     pkgs.nil         # Nix language server
-
-    # Agent Network Support
-    pkgs.puppeteer-cli  # For browser automation
-    pkgs.chromium      # Required for Puppeteer
   ];
 
   env = {
-    # Editor & Terminal
+    # Editor & Terminal (Existing)
     EDITOR = "code";
     TERM = "xterm-256color";
 
-    # API Keys & Credentials - Replace with your actual keys locally
+    # API Keys & Credentials - Replace with your actual keys locally (Existing, updated for Minocrisy)
     CLINE_API_KEY = "YOUR_CLINE_API_KEY";
     NOTION_API_KEY = "YOUR_NOTION_API_KEY";
     NOTION_DATABASE_ID = "YOUR_NOTION_DATABASE_ID";
     
-    # Twitter Integration
-    TWITTER_API_KEY = "YOUR_TWITTER_API_KEY";
+    # Twitter/X Integration (Existing, updated for Minocrisy X accounts)
+    TWITTER_API_KEY = "YOUR_TWITTER_API_KEY";  # For X API integration, if needed for automation
     TWITTER_API_SECRET = "YOUR_TWITTER_API_SECRET";
     TWITTER_ACCESS_TOKEN = "YOUR_TWITTER_ACCESS_TOKEN";
     TWITTER_ACCESS_SECRET = "YOUR_TWITTER_ACCESS_SECRET";
-    
-    # AI Integration
-    GLHF_API_KEY = "YOUR_GLHF_API_KEY";
-    GEMINI_API_KEY = "YOUR_GEMINI_API_KEY";  # For Gemini integration
-    
-    # Agent Network Configuration
-    AGENT_NETWORK_PORT = "3000";
-    AGENT_NETWORK_HOST = "localhost";
-    PUPPETEER_EXECUTABLE_PATH = "${pkgs.chromium}/bin/chromium";  # For browser automation
+    XAI_API_KEY = "YOUR_XAI_API_KEY";  # For xAI (Grok 3) API calls, relevant for Minocrisy tools
 
-    # Database Connections
+    # AI Integration (Existing, expanded for Talking Head)
+    GLHF_API_KEY = "YOUR_GLHF_API_KEY";
+    # New: ElevenLabs API key for text-to-speech in talking head
+    ELEVENLABS_API_KEY = "";  # API key for ElevenLabs TTS – add your key here for audio generation
+    # New: OpenAI API key for DALL-E image generation
+    OPENAI_API_KEY = "";  # API key for OpenAI (DALL-E) to create the avatar image
+    # New: RunwayML API key for talking head animation
+    RUNWAYML_API_KEY = "";  # API key for RunwayML to animate the avatar – add your key here
+
+    # Database Connections (Existing, optional for Minocrisy – paused MongoDB to delete)
     MONGODB_URI = "";
     POSTGRES_URL = "";
     REDIS_URL = "";
 
-    # Cloud Platform Configurations
-    GOOGLE_APPLICATION_CREDENTIALS = "";
-    GOOGLE_CLOUD_PROJECT = "";
+    # Cloud Platform Configurations (Existing, updated for Google Cloud deployment)
+    GOOGLE_APPLICATION_CREDENTIALS = "";  # For Google Cloud auth, if deploying the web app
+    GOOGLE_CLOUD_PROJECT = "";  # Your Google Cloud project ID for Minocrisy
     AWS_PROFILE = "";
     AZURE_SUBSCRIPTION_ID = "";
   };
@@ -105,67 +104,54 @@
   # IDX specific configurations
   idx = {
     extensions = [
-      # Core IDE Features
+      # Core IDE Features (Existing)
       "vscodevim.vim"
       "editorconfig.editorconfig"
       "streetsidesoftware.code-spell-checker"
       
-      # Development
-      "ms-python.python"
+      # Development (Existing, updated for Python focus)
+      "ms-python.python"  # Essential for Python 3.11 development
       "golang.go"
       "rust-lang.rust-analyzer"
       "dbaeumer.vscode-eslint"
       "esbenp.prettier-vscode"
       
-      # Cloud & Infrastructure
+      # Cloud & Infrastructure (Existing)
       "ms-azuretools.vscode-docker"
       "hashicorp.terraform"
-      "googlecloudtools.cloudcode"
+      "googlecloudtools.cloudcode"  # For Google Cloud deployment of the web app
       
-      # Database
+      # Database (Existing, optional for Minocrisy – MongoDB to be deleted)
       "mongodb.mongodb-vscode"
       "cweijan.vscode-postgresql-client2"
       
-      # Collaboration & Source Control
+      # Collaboration & Source Control (Existing)
       "github.copilot"
       "github.copilot-chat"
       "eamodio.gitlens"
       "mhutchie.git-graph"
       
-      # IDE Enhancements
+      # IDE Enhancements (Existing)
       "usernamehw.errorlens"
       "gruntfuggly.todo-tree"
       "christian-kohler.path-intellisense"
       "visualstudioexptteam.vscodeintellicode"
-
-      # AI & Agent Support
-      "google.cloud-code"  # For Gemini integration
-      "ms-toolsai.jupyter" # For AI notebooks
-      "ms-python.vscode-pylance"
     ];
 
     workspace = {
       onCreate = {
         setup-check = ''
-          echo "🔧 Setting up development environment..."
-          echo "Checking core dependencies..."
+          echo "🔧 Setting up development environment for Minocrisy Talking Head..."
           git --version
           docker --version
-          python3 --version
+          python3 --version  # Should show Python 3.11
           node --version
-
-          echo "Verifying agent network dependencies..."
-          if command -v chromium &> /dev/null; then
-            echo "✓ Chromium installed"
-          else
-            echo "⚠️ Chromium not found"
-          fi
         '';
       };
 
       onStart = {
         environment-check = ''
-          echo "🔍 Checking development environment..."
+          echo "🔍 Checking development environment for Minocrisy Talking Head..."
           echo "System Tools:"
           echo "============"
           git --version
@@ -175,21 +161,6 @@
           terraform --version
           aws --version
           gcloud --version
-
-          echo "Agent Network Status:"
-          echo "===================="
-          echo "Checking agent network configuration..."
-          if [ -n "$AGENT_NETWORK_PORT" ]; then
-            echo "✓ Agent network configured on port $AGENT_NETWORK_PORT"
-          else
-            echo "⚠️ Agent network port not configured"
-          fi
-
-          if [ -n "$PUPPETEER_EXECUTABLE_PATH" ]; then
-            echo "✓ Browser automation path configured"
-          else
-            echo "⚠️ Browser automation path not set"
-          fi
         '';
       };
     };
